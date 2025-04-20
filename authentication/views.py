@@ -34,6 +34,7 @@ class UserSignupView(APIView):
                 return Response({'message': 'Failed to send activation email. Please try again later.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 
+
 class EmailVerification(View):
     def get(self, request, uid64, token):
         try:
