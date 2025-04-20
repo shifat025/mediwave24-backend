@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Your Mediwave24 Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fc;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #3498db;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            text-align: center;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 30px;
+            color: #777;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Mediwave24!</h2>
+        <p>Dear {{ user.first_name }},</p>
+        <p>Thank you for registering on Mediwave24, your gateway to advanced healthcare services. To complete your registration and activate your account, please click the button below:</p>
+        <a href="{{ confirm_link }}" class="button">Activate Your Account</a>
+        <p>If you did not create this account, please disregard this email. No further action is required.</p>
+        <div class="footer">
+            <p>Best regards, <br>The Mediwave24 Team</p>
+            {% comment %} <p><a href="http://mediwave24.com">Visit our website</a> | <a href="mailto:support@mediwave24.com">Contact Support</a></p> {% endcomment %}
+        </div>
+    </div>
+</body>
+</html>

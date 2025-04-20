@@ -1,4 +1,3 @@
-
 import pyotp
 from django.db import models
 import uuid
