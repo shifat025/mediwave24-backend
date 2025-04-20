@@ -1,4 +1,6 @@
 from django.db import models
+from prescriptions.models import Prescription
+from authentication.models import User
 
 # Create your models here.
 class MedicineOrderStatus(models.TextChoices):
@@ -95,13 +97,13 @@ class MedicineOrder(models.Model):
     delivery_person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='deliveries')
     delivery_otp = models.CharField(max_length=6, blank=True)
     notes = models.TextField(blank=True)
+    status_hashmap = models.JSONField(default=dict)  # For O(1) status tracking
     
     def __str__(self):
         return f"Order #{self.id} - {self.patient.username} at {self.pharmacy.name}"
 
 class OrderedMedicine(models.Model):
     order = models.ForeignKey(MedicineOrder, on_delete=models.CASCADE, related_name='ordered_items')
-    inventory = models.ForeignKey(Inventory, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField()
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
     discount_per_unit = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)

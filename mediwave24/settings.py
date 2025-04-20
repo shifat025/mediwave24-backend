@@ -31,6 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'authentication.User'
 
 # Application definition
 
@@ -45,6 +46,17 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'autoslug',
+    'authentication',
+    'doctors',
+    'patients',
+    'appointments',
+    'payments',
+    'notifications',
+    'pharmacy',
+    'admin_panel',
+    'ai_features',
+    'prescriptions',
+    'analytics'
 ]
 
 MIDDLEWARE = [

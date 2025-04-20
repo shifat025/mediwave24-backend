@@ -1,1 +1,5 @@
 mediwave24/.env
+
+__pycache__/
+*.pyc
+fake_data.py

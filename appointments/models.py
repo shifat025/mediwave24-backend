@@ -2,6 +2,7 @@ from django.db import models
 from authentication.models import User
 from doctors.models import Doctor,AvailableTime
 from patients.models import Patient
+import uuid
 
 # Create your models here.
 Appointment_Status = [
@@ -15,6 +16,7 @@ Appointment_Status = [
 
 
 class Appointment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE)
     docter = models.ForeignKey(Doctor,on_delete=models.CASCADE)
     appointment_status = models.CharField(choices=Appointment_Status,max_length=15,default='Pending')
@@ -24,9 +26,6 @@ class Appointment(models.Model):
     meeting_link = models.URLField(blank=True, null=True)
     is_followup = models.BooleanField(default=False)
     cancel = models.BooleanField(default=False)
-    # Rating (captured after completion)
-    rating = models.IntegerField(null=True, blank=True)
-    review = models.TextField(blank=True, null=True)
     cancellation_reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -35,6 +34,7 @@ class Appointment(models.Model):
         return f"Doctor : {self.docter.user.first_name}, Patient : {self.patient.user.first_name}"
     
 class AppointmentReschedule(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, related_name='reschedules')
     original_time = models.ForeignKey(AvailableTime, on_delete=models.SET_NULL, null=True, related_name='original_reschedules')
     new_time = models.ForeignKey(AvailableTime, on_delete=models.SET_NULL, null=True, related_name='new_reschedules')

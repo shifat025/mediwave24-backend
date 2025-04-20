@@ -58,7 +58,7 @@ class PrescribedMedicine(models.Model):
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     dosage = models.CharField(max_length=100)  # e.g., "1 tablet twice daily"
     duration = models.CharField(max_length=100)  # e.g., "7 days"
-    duration_unit = models.CharField(max_length=10, choices=DURATION_UNIT_CHOICES)
+    duration_unit = models.CharField(max_length=15, choices=DURATION_UNIT_CHOICES)
     instructions = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -87,28 +87,5 @@ class TestResult(models.Model):
         return f"Result for {self.prescribed_test.test.name}"
 
 
-class PharmacyOrder(models.Model):
-    STATUS_CHOICES = (
-        ('PENDING', 'Pending'),
-        ('PRICE_CONFIRMED', 'Price Confirmed'),
-        ('PAID', 'Paid'),
-        ('PROCESSING', 'Processing'),
-        ('SHIPPED', 'Shipped'),
-        ('DELIVERED', 'Delivered'),
-        ('CANCELLED', 'Cancelled'),
-    )
-    
-    prescription = models.ForeignKey(Prescription, on_delete=models.CASCADE, related_name='pharmacy_orders')
-    patient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='medicine_orders')
-    pharmacy = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    payment_method = models.CharField(max_length=50, blank=True)
-    delivery_address = models.TextField()
-    expected_delivery_date = models.DateField(null=True, blank=True)
-    delivery_person = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='deliveries')
-    delivery_otp = models.CharField(max_length=6, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    status_hashmap = models.JSONField(default=dict)  # For O(1) status tracking
+
 

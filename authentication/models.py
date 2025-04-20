@@ -6,6 +6,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.core.validators import  EmailValidator
 
 
+# Suggestion: Add trusted_devices flag to UserDeviceActivity for 2FA bypass
+
 GENDER_CHOICES = [
     ('male', 'Male'),
     ('female', 'Female'),
@@ -52,7 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name= models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     phone = models.CharField(max_length=20, blank=True)
-    gender = models.CharField(max_length=10,  choices= GENDER_CHOICES,null=True, blank=True)
+    gender = models.CharField(max_length=15,  choices= GENDER_CHOICES,null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="user")
     address = models.TextField(blank=True, null=True)
@@ -66,7 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     # 2FA
     otp_enabled = models.BooleanField(default=False)
-    otp_base32 = models.CharField(max_length=64,  default=lambda: pyotp.random_base32(), blank=True)
+    otp_base32 = models.CharField(max_length=64,  default=pyotp.random_base32(), blank=True)
     
     # Login Security
     last_login_ip = models.GenericIPAddressField(blank=True, null=True)
@@ -104,6 +106,8 @@ class UserDeviceActivity(models.Model):
     user_agent = models.TextField(blank=True, null=True)  # User agent string (browser and OS info)
     location = models.CharField(max_length=200, blank=True, null=True)  # User agent string (browser and OS info)
     login_time = models.DateTimeField(auto_now_add=True)
+    trusted_device = models.BooleanField(default=False)
+
 
     class Meta:
         verbose_name = "Device Activity"
@@ -142,3 +146,22 @@ class SecurityAlert(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.alert_type}"
+
+
+# class AuditLog(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+#     action = models.CharField(max_length=100)  # e.g. 'DELETE_PATIENT', 'UPDATE_PROFILE'
+#     model_name = models.CharField(max_length=100)  # e.g. 'Patient', 'Prescription'
+#     object_id = models.CharField(max_length=100, null=True, blank=True)
+#     description = models.TextField(blank=True, null=True)  # e.g. 'Patient John Doe was deleted by Admin'
+#     ip_address = models.GenericIPAddressField(null=True, blank=True)
+#     device_info = models.TextField(null=True, blank=True)
+#     location = models.CharField(max_length=255, null=True, blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+
+#     class Meta:
+#         ordering = ['-created_at']
+
+#     def __str__(self):
+#         return f"{self.user} | {self.action} | {self.created_at}"

@@ -1,7 +1,9 @@
 from django.db import models
 from authentication.models import User
+import uuid
 
 class Notification(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     message = models.TextField()
@@ -21,7 +23,7 @@ class Reminder(models.Model):
         ('PAYMENT', 'Payment'),
         ('FOLLOW_UP', 'Follow-up'),
     )
-    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reminders')
     reminder_type = models.CharField(max_length=20, choices=REMINDER_TYPE_CHOICES)
     title = models.CharField(max_length=255)
