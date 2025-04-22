@@ -27,3 +27,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         account.is_active = False
         account.save()
         return account
+    
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=30)
+    password = serializers.CharField(max_length=30, write_only=True)
