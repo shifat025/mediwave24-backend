@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer,LoginSerializer
 from rest_framework.views import APIView, View
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from django.contrib.auth import authenticate, login
 from rest_framework import status
 from django.contrib import messages
 from django.urls import reverse
@@ -53,3 +54,29 @@ class EmailVerification(View):
             messages.error(request,"Verification failed. Please check the link")
 
         return redirect(reverse('signup'))
+
+
+class LoginView(APIView):
+    serializer_class = LoginSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+
+            try: 
+                get_email = User.objects.get(email = email)
+            except User.DoesNotExist:
+                return Response({'error': "Invalid Credentials"})
+            
+            autthenticate_user = authenticate(request, email = email, password = password)
+
+            if autthenticate_user:
+                login(request, autthenticate_user)
+                return Response({'message': 'Login successful'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
